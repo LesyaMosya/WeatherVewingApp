@@ -20,4 +20,9 @@ public class NetworkService {
         }
         return mInstance;
     }
+
+    public OpenWeatherAPI getJSONApi(){
+        return mRetrofit.create(OpenWeatherAPI.class);
+    }
+
 }

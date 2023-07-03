@@ -3,7 +3,8 @@ package com.example.weathervewingapp;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Post {
+public class MainDataJSON {
+
     @SerializedName("temp")
     @Expose
     private float temp;
@@ -13,16 +14,6 @@ public class Post {
     @SerializedName("humidity")
     @Expose
     private int humidity;
-    @SerializedName("speed")
-    @Expose
-    private int speed;
-    @SerializedName("description")
-    @Expose
-    private String description;
-    @SerializedName("name")
-    @Expose
-    private String name;
-
 
     public float getTemp() {
         return temp;
@@ -45,24 +36,4 @@ public class Post {
         this.humidity = humidity;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName(){
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
 }
