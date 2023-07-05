@@ -7,12 +7,9 @@ public class WindJSON {
 
     @SerializedName("speed")
     @Expose
-    private int speed;
+    private String speed;
 
-    public int getSpeed() {
+    public String getSpeed() {
         return speed;
-    }
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 }

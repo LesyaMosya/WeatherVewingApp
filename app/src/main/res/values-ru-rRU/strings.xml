@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LesyaWeather</string>
+    <string name="windString">Ветер</string>
+    <string name="humidityString">Влажность</string>
+    <string name="feelsLikeString">Ощущается как</string>
+    <string name="city">Санкт-Петербург</string>
+    <string name="description">Солнечно</string>
+    <string name="speedString">м/сек</string>
+    <string name="tomorrow">Завтра</string>
+</resources>

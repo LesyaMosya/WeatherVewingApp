@@ -1,6 +1,14 @@
 <resources>
-    <string name="Wind">Ветер</string>
-    <string name="Humidity">Влажность</string>
-    <string name="FeelsLike">Ощущается как</string>
-    <string name="weather">Weather</string>
+    <string name="app_name">LesyaWeather</string>
+    <string name="windString">Wind</string>
+    <string name="humidityString">Humidity</string>
+    <string name="feelsLikeString">Feels like</string>
+    <string name="city">Sant-Petersburg</string>
+    <string name="description">Sun</string>
+    <string name="temp" translatable="false">27°C</string>
+    <string name="feelsLike" translatable="false">25°C</string>
+    <string name="humidity" translatable="false">70%</string>
+    <string name="speedWind" translatable="false">5</string>
+    <string name="speedString">m/sec</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>
