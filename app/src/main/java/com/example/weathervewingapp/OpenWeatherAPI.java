@@ -7,7 +7,16 @@ import retrofit2.http.Query;
 
 public interface OpenWeatherAPI {
     @GET("weather")
-    Call<CurrentWeatherResponse> getWeather(
+    Call<CurrentWeatherResponse> getCurrentWeather(
+            @Query("appid") String appid,
+            @Query("lang") String lang,
+            @Query("lat") double lat,
+            @Query("lon") double lon,
+            @Query("units") String units
+    );
+
+    @GET("forecast")
+    Call<ForecastWeatherResponse> getForecastWeather(
             @Query("appid") String appid,
             @Query("lang") String lang,
             @Query("lat") double lat,
