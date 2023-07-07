@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|top"
                 android:orientation="horizontal"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="15dp">
 
                 <TextView
                     android:id="@+id/city"
@@ -39,15 +39,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="30dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    style = "@style/secondText" />
+                    style = "@style/description"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -59,7 +58,7 @@
                         android:id="@+id/icon"
                         android:layout_width="140dp"
                         android:layout_height="140dp"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:contentDescription="@string/description"/>
 
                     <TextView
@@ -80,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/feelsLikeString"
-                        style = "@style/feels_like_base" />
+                        style = "@style/current_feels_like" />
 
                     <Space
                         android:layout_width="10dp"
@@ -90,7 +89,7 @@
                         android:id="@+id/feelsLike"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style = "@style/feels_like_base" />
+                        style = "@style/current_feels_like" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -101,7 +100,7 @@
                 android:layout_below="@id/currentWeather"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="40dp"
                 android:weightSum="2">
 
                 <LinearLayout
@@ -117,7 +116,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/windString"
-                        style = "@style/base" />
+                        style = "@style/add_params" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -130,7 +129,7 @@
                             android:id="@+id/speedWind"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style = "@style/base" />
+                            style = "@style/add_params" />
 
                         <Space
                             android:layout_width="10dp"
@@ -141,7 +140,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/speedString"
-                            style = "@style/base" />
+                            style = "@style/add_params" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -162,13 +161,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/humidityString"
-                        style = "@style/base" />
+                        style = "@style/add_params" />
 
                     <TextView
                         android:id="@+id/humidity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style = "@style/base" />
+                        style = "@style/add_params" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -188,34 +187,31 @@
                     android:background="#3CF1EBF1"
                     android:orientation="horizontal"
                     android:paddingHorizontal="17dp"
-                    android:paddingVertical="10dp"
                     android:weightSum="5">
 
                     <TextView
                         android:id="@+id/tomorrow"
+                        style="@style/days_of_week"
                         android:layout_height="wrap_content"
-                        style="@style/base_name"
-                        android:text="@string/tomorrow"/>
+                        android:gravity="center_vertical"
+                        android:text="@string/tomorrow" />
 
                     <ImageView
-                        android:id="@+id/iconFirst"
-                        android:layout_width="25dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_gravity="center_vertical"
+                        android:id="@+id/iconTomorrow"
+                        style = "@style/list_icons"
                         android:contentDescription="@string/description"/>
 
                     <TextView
-                        android:id="@+id/firstTemp"
+                        android:id="@+id/tomorrowTemp"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style = "@style/base" />
+                        style = "@style/temp_of_week" />
 
                     <TextView
-                        android:id="@+id/firstFeelsLike"
+                        android:id="@+id/tomorrowFeelsLike"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style="@style/feels_like" />
+                        style="@style/feels_like_of_week" />
 
                 </LinearLayout>
                 <LinearLayout
@@ -226,34 +222,30 @@
                     android:background="#3CF1EBF1"
                     android:orientation="horizontal"
                     android:paddingHorizontal="17dp"
-                    android:paddingVertical="10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:weightSum="5">
 
                     <TextView
                         android:id="@+id/thirdDay"
                         android:layout_height="wrap_content"
-                        style="@style/base_name" />
+                        style="@style/days_of_week" />
 
                     <ImageView
                         android:id="@+id/iconThird"
-                        android:layout_width="25dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_gravity="center_vertical"
+                        style = "@style/list_icons"
                         android:contentDescription="@string/description" />
 
                     <TextView
                         android:id="@+id/thirdTemp"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style = "@style/base" />
+                        style = "@style/temp_of_week" />
 
                     <TextView
                         android:id="@+id/thirdFeelsLike"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style="@style/feels_like"  />
+                        style="@style/feels_like_of_week"  />
 
                 </LinearLayout>
                 <LinearLayout
@@ -264,34 +256,30 @@
                     android:background="#3CF1EBF1"
                     android:orientation="horizontal"
                     android:paddingHorizontal="17dp"
-                    android:paddingVertical="10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:weightSum="5">
 
                     <TextView
                         android:id="@+id/fourthDay"
                         android:layout_height="wrap_content"
-                        style="@style/base_name" />
+                        style="@style/days_of_week" />
 
                     <ImageView
                         android:id="@+id/iconFourth"
-                        android:layout_width="25dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_gravity="center_vertical"
+                        style = "@style/list_icons"
                         android:contentDescription="@string/description"/>
 
                     <TextView
                         android:id="@+id/fourthTemp"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style = "@style/base" />
+                        style = "@style/temp_of_week" />
 
                     <TextView
                         android:id="@+id/fourthFeelsLike"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style="@style/feels_like"  />
+                        style="@style/feels_like_of_week"  />
 
                 </LinearLayout>
                 <LinearLayout
@@ -302,20 +290,17 @@
                     android:background="#3CF1EBF1"
                     android:orientation="horizontal"
                     android:paddingHorizontal="17dp"
-                    android:paddingVertical="10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:weightSum="5">
 
                     <TextView
                         android:id="@+id/fifthDay"
                         android:layout_height="wrap_content"
-                        style="@style/base_name" />
+                        style="@style/days_of_week" />
 
                     <ImageView
                         android:id="@+id/iconFifth"
-                        android:layout_width="25dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="40dp"
+                        style = "@style/list_icons"
                         android:layout_gravity="center_vertical"
                         android:contentDescription="@string/description" />
 
@@ -323,13 +308,13 @@
                         android:id="@+id/fifthTemp"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style = "@style/base" />
+                        style = "@style/temp_of_week" />
 
                     <TextView
                         android:id="@+id/fifthFeelsLike"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        style="@style/feels_like"  />
+                        style="@style/feels_like_of_week"  />
 
                 </LinearLayout>
             </LinearLayout>

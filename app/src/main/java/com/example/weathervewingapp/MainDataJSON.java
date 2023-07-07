@@ -14,6 +14,12 @@ public class MainDataJSON {
     @SerializedName("humidity")
     @Expose
     private String humidity;
+    @SerializedName("temp_max")
+    @Expose
+    private float temp_max;
+    @SerializedName("temp_min")
+    @Expose
+    private float temp_min;
 
     public float getTemp() {
         return temp;
@@ -27,4 +33,11 @@ public class MainDataJSON {
         return humidity;
     }
 
+    public float getTemp_max() {
+        return temp_max;
+    }
+
+    public float getTemp_min() {
+        return temp_min;
+    }
 }

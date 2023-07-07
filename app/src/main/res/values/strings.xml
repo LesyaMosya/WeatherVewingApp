@@ -5,4 +5,5 @@
     <string name="feelsLikeString">Feels like</string>
     <string name="speedString">m/sec</string>
     <string name="tomorrow">Tomorrow</string>
+    <string name="description">Sun</string>
 </resources>

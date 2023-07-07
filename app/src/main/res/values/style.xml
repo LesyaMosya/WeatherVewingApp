@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="main">
+        <item name="android:background">@drawable/bg_gradient</item>
+    </style>
     <style name="city">
-        <item name="android:textColor">@color/purple_dark</item>
+        <item name="android:textColor">@color/dark</item>
         <item name="android:textSize">40sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
-    <style name="feels_like_base">
-        <item name="android:textColor">@color/purple_base</item>
-        <item name="android:textSize">25sp</item>
+    <style name="description">
+        <item name="android:textColor">@color/base</item>
+        <item name="android:textSize">30sp</item>
         <item name="android:fontFamily">sans-serif-light</item>
-    </style>
-    <style name="feels_like">
-        <item name="android:textColor">@color/purple_light</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:layout_width">60dp</item>
-    </style>
-    <style name="main">
-        <item name="android:background">@drawable/bg_gradient</item>
-    </style>
-    <style name="base_name">
-        <item name="android:textColor">@color/purple_base</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:layout_width">130dp</item>
-    </style>
-    <style name="base">
-        <item name="android:textColor">@color/purple_base</item>
-        <item name="android:textSize">25sp</item>
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:layout_width">65dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
     <style name="current_weather">
-        <item name="android:textColor">@color/purple_base</item>
+        <item name="android:textColor">@color/base</item>
         <item name="android:textSize">90sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
-    <style name="secondText">
-        <item name="android:textColor">@color/purple_base</item>
-        <item name="android:textSize">30sp</item>
+    <style name="current_feels_like">
+        <item name="android:textColor">@color/base</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="add_params">
+        <item name="android:textColor">@color/base</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="days_of_week">
+        <item name="android:textColor">@color/base</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_width">115dp</item>
+    </style>
+    <style name="list_icons">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">65dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="temp_of_week">
+        <item name="android:textColor">@color/base</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+    </style>
+    <style name="feels_like_of_week">
+        <item name="android:textColor">@color/light</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">15dp</item>
     </style>
 </resources>

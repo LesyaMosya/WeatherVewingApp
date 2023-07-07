@@ -21,7 +21,7 @@ public class CurrentWeatherResponse {
     private String name;
     @SerializedName("dt_txt")
     @Expose
-    private Date dt_txt;
+    private String dt_txt;
 
 
     public List<WeatherJSON> getWeather() {
@@ -40,7 +40,7 @@ public class CurrentWeatherResponse {
         return name;
     }
 
-    public Date getDt_txt() {
+    public String getDt_txt() {
         return dt_txt;
     }
 }
