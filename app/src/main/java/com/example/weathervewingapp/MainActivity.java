@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
         String currentTemp = (int)currentWeather.getMain().getTemp() + "°C";
         String feelsLike =(int)currentWeather.getMain().getFeelsLike() +"°C";
         String icon = currentWeather.getWeather().get(0).getIcon();
-        String speedWind = currentWeather.getWind().getSpeed() + " " + getResources().getString(R.string.speedString);
+        String speedWind = (int)currentWeather.getWind().getSpeed() + " " + getResources().getString(R.string.speedString);
         String humidity = currentWeather.getMain().getHumidity() + "%";
 
         binding.setWeather(new Weather(city, description,

@@ -7,9 +7,9 @@ public class WindJSON {
 
     @SerializedName("speed")
     @Expose
-    private String speed;
+    private float speed;
 
-    public String getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 }
