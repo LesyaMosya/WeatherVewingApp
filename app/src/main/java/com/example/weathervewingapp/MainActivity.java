@@ -1,30 +1,26 @@
 package com.example.weathervewingapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.apache.commons.lang3.text.WordUtils;
+import com.example.weathervewingapp.databinding.ActivityWeatherBinding;
+
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -37,83 +33,59 @@ public class MainActivity extends AppCompatActivity {
 
     String lang;
     double lon, lat;
-    TextView city, temp, description, feelsLike, speedWind, humidity;
-    TextView thirdDay, fourthDay, fifthDay;
-    TextView tomorrowTemp, thirdTemp, fourthTemp, fifthTemp;
-    TextView tomorrowFeelsLike, thirdFeelsLike, fourthFeelsLike, fifthFeelsLike;
-    ImageView icon;
-    ImageView iconTomorrow, iconThird, iconFourth, iconFifth;
-    final String iconURL = "https://openweathermap.org/img/wn/";
+
     private final int REQUEST_LOCATION_PERMISSION = 1;
     SwipeRefreshLayout swipeRefreshLayout;
+    ActivityWeatherBinding binding;
+    RecyclerView recyclerView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_weather);
 
-        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(false);
-
-                getCurrentWeatherResponse();
-                getForecastWeather();
-            }
-        });
-
+        recyclerView = findViewById(R.id.list);
         lang = Locale.getDefault().getLanguage();
 
-        city = findViewById(R.id.city);
-        description = findViewById(R.id.description);
-        temp = findViewById(R.id.temp);
-        icon = findViewById(R.id.icon);
-        feelsLike = findViewById(R.id.feelsLike);
-        speedWind = findViewById(R.id.speedWind);
-        humidity = findViewById(R.id.humidity);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            getCurrentWeatherResponse();
+        });
+    }
 
-        thirdDay = findViewById(R.id.thirdDay);
-        fourthDay = findViewById(R.id.fourthDay);
-        fifthDay = findViewById(R.id.fifthDay);
-
-        tomorrowTemp = findViewById(R.id.tomorrowTemp);
-        thirdTemp = findViewById(R.id.thirdTemp);
-        fourthTemp = findViewById(R.id.fourthTemp);
-        fifthTemp = findViewById(R.id.fifthTemp);
-
-        tomorrowFeelsLike = findViewById(R.id.tomorrowFeelsLike);
-        thirdFeelsLike = findViewById(R.id.thirdFeelsLike);
-        fourthFeelsLike = findViewById(R.id.fourthFeelsLike);
-        fifthFeelsLike = findViewById(R.id.fifthFeelsLike);
-
-        iconTomorrow = findViewById(R.id.iconTomorrow);
-        iconThird = findViewById(R.id.iconThird);
-        iconFourth = findViewById(R.id.iconFourth);
-        iconFifth = findViewById(R.id.iconFifth);
-
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        LocationListener locationListener = new MyLocationListener();
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getCurrentWeatherResponse();
     }
 
     private class MyLocationListener implements LocationListener {
+
+        public void setUpLocationListener(Context context)
+        {
+            LocationManager locationManager = (LocationManager)
+                    context.getSystemService(Context.LOCATION_SERVICE);
+
+            LocationListener locationListener = new MyLocationListener();
+
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
+            lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+            lon = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+        }
+
         @Override
         public void onLocationChanged(Location location) {
-            lon = location.getLongitude();
+/*            lon = location.getLongitude();
             lat = location.getLatitude();
 
-            getCurrentWeatherResponse();
-            getForecastWeather();
+            getCurrentWeatherResponse();*/
         }
     }
     @Override
@@ -122,146 +94,119 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+
+        if (EasyPermissions.hasPermissions(this, permissions)) {
+           getCurrentWeatherResponse();
+        }
     }
 
     @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
     public void requestLocationPermission() {
         String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
+
         if (!EasyPermissions.hasPermissions(this, perms)) {
-            EasyPermissions.requestPermissions(this, "Please grant the location permission",
-                    REQUEST_LOCATION_PERMISSION, perms);
+
+            EasyPermissions.requestPermissions(this,
+                    getResources().getString(R.string.permission), REQUEST_LOCATION_PERMISSION, perms);
         }
     }
-
     private void getCurrentWeatherResponse() {
+
+        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+            return;
+        }
+
+        lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+        lon = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+
         OpenWeatherRequest openWeatherRequest = new OpenWeatherRequest();
 
         NetworkService.getInstance()
                 .getJSONAPI()
                 .getCurrentWeather(openWeatherRequest.getAppid(), lang, lat, lon, openWeatherRequest.getUnits())
-                .enqueue(new Callback<CurrentWeatherResponse>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<CurrentWeatherResponse> call,
                                            @NonNull Response<CurrentWeatherResponse> response) {
 
                         CurrentWeatherResponse currentWeather = response.body();
-                        try {
+                        if (currentWeather != null){
                             loadCurrentWeather(currentWeather);
+                            getForecastWeatherResponse();
                         }
-                            catch (NullPointerException e){
-                            Toast.makeText(getApplicationContext(), "Error connected",
-                                    Toast.LENGTH_LONG).show();
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<CurrentWeatherResponse> call,
                                           @NonNull Throwable t) {
-                        Toast.makeText(getApplicationContext(), "An error has occured",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void loadCurrentWeather(@NonNull CurrentWeatherResponse currentWeather){
-        city.setText(currentWeather.getName());
 
-        String strDescription = currentWeather.getWeather().get(0).getDescription();
-        strDescription = strDescription.substring(0, 1).toUpperCase() + strDescription.substring(1);
-        description.setText(strDescription);
+        String city = currentWeather.getName();
 
-        String strTemp = (int)currentWeather.getMain().getTemp() + "°C";
-        temp.setText(strTemp);
+        String description = currentWeather.getWeather().get(0).getDescription();
+        description = description.substring(0, 1).toUpperCase() + description.substring(1);
 
-        String imagePath = currentWeather.getWeather().get(0).getIcon()+".png";
-        Picasso.get().load(iconURL + imagePath).into(icon);
+        String currentTemp = (int)currentWeather.getMain().getTemp() + "°C";
+        String feelsLike =(int)currentWeather.getMain().getFeelsLike() +"°C";
+        String icon = currentWeather.getWeather().get(0).getIcon();
+        String speedWind = currentWeather.getWind().getSpeed() + " " + getResources().getString(R.string.speedString);
+        String humidity = currentWeather.getMain().getHumidity() + "%";
 
-        String strFeelsLike =(int)currentWeather.getMain().getFeelsLike() +"°C";
-        feelsLike.setText(strFeelsLike);
-
-        String strSpeedWind = currentWeather.getWind().getSpeed();
-        speedWind.setText(strSpeedWind);
-
-        String strHumidity = currentWeather.getMain().getHumidity() + "%";
-        humidity.setText(strHumidity);
-
+        binding.setWeather(new Weather(city, description,
+                new WeatherData(currentTemp, feelsLike, icon), speedWind, humidity));
     }
 
-    private void getForecastWeather(){
+    private void getForecastWeatherResponse(){
         OpenWeatherRequest openWeatherRequest = new OpenWeatherRequest();
 
         NetworkService.getInstance()
                 .getJSONAPI()
                 .getForecastWeather(openWeatherRequest.getAppid(), lang, lat, lon, openWeatherRequest.getUnits())
-                .enqueue(new Callback<ForecastWeatherResponse>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<ForecastWeatherResponse> call,
                                            @NonNull Response<ForecastWeatherResponse> response) {
 
                         ForecastWeatherResponse forecastWeather = response.body();
-                        try {
+                        if (forecastWeather != null) {
                             loadForecastWeather(forecastWeather);
                         }
-                        catch (NullPointerException e){
-                            Toast.makeText(getApplicationContext(), "Error connected",
-                                    Toast.LENGTH_LONG).show();
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ForecastWeatherResponse> call,
                                           @NonNull Throwable t) {
-                        Toast.makeText(getApplicationContext(), "An error has occured",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void loadForecastWeather(@NonNull ForecastWeatherResponse forecastWeather){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-
-        setDayOfWeek(calendar);
 
         HandlerForecastWeatherJSON handlerForecastWeatherJSON = new HandlerForecastWeatherJSON();
+        List<WeatherData> listForecastWeather = handlerForecastWeatherJSON.setListForecastWeather(forecastWeather);
 
-        int index = handlerForecastWeatherJSON.checkIndex(calendar, forecastWeather);
-
-        ArrayList<Integer> listMaxTemp = handlerForecastWeatherJSON.computeListMaxTemp(index, forecastWeather);
-        tomorrowTemp.setText(listMaxTemp.get(0) + "°C");
-        thirdTemp.setText(listMaxTemp.get(1) + "°C");
-        fourthTemp.setText(listMaxTemp.get(2) + "°C");
-        fifthTemp.setText(listMaxTemp.get(3) + "°C");
-
-        ArrayList<Integer> listMinTemp = handlerForecastWeatherJSON.computeListMinTemp(index, forecastWeather);
-        tomorrowFeelsLike.setText(listMinTemp.get(0) + "°C");
-        thirdFeelsLike.setText(listMinTemp.get(1) + "°C");
-        fourthFeelsLike.setText(listMinTemp.get(2) + "°C");
-        fifthFeelsLike.setText(listMinTemp.get(3) + "°C");
-
-        ArrayList<String> listIcons = handlerForecastWeatherJSON.computeListIcons(index, forecastWeather);
-        Picasso.get().load(iconURL + listIcons.get(0) + ".png").into(iconTomorrow);
-        Picasso.get().load(iconURL + listIcons.get(1) + ".png").into(iconThird);
-        Picasso.get().load(iconURL + listIcons.get(2) + ".png").into(iconFourth);
-        Picasso.get().load(iconURL + listIcons.get(3) + ".png").into(iconFifth);
+        WeatherDataAdapter adapter = new WeatherDataAdapter(this, listForecastWeather);
+        recyclerView.setAdapter(adapter);
     }
-
-    private void setDayOfWeek(Calendar calendar){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE", Locale.getDefault());
-
-        calendar.add(Calendar.DAY_OF_WEEK, 2);
-        String strThirdDay = dateFormat.format(calendar.getTime());
-        thirdDay.setText(WordUtils.capitalize(strThirdDay));
-
-        calendar.add(Calendar.DAY_OF_WEEK, 1);
-        String strFourthDay = dateFormat.format(calendar.getTime());
-        fourthDay.setText(WordUtils.capitalize(strFourthDay));
-
-        calendar.add(Calendar.DAY_OF_WEEK, 1);
-        String strFifthDay = dateFormat.format(calendar.getTime());
-        fifthDay.setText(WordUtils.capitalize(strFifthDay));
-    }
-
 
 }

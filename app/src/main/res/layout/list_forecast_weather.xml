@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#3CF1EBF1"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingHorizontal="13dp">
+
+    <TextView
+        android:id="@+id/day_of_week"
+        style="@style/days_of_week"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" />
+
+    <ImageView
+        android:id="@+id/icon_weather"
+        style="@style/list_icons"
+        android:contentDescription="@string/description" />
+
+    <TextView
+        android:id="@+id/max_temp"
+        style="@style/temp_of_week"
+        android:layout_height="wrap_content"
+        android:gravity="end" />
+
+    <TextView
+        android:id="@+id/feels_life_temp"
+        style="@style/feels_like_of_week"
+        android:layout_height="wrap_content"
+        android:gravity="end" />
+
+</LinearLayout>

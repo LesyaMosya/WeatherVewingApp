@@ -6,4 +6,6 @@
     <string name="description">Солнечно</string>
     <string name="speedString">м/сек</string>
     <string name="tomorrow">Завтра</string>
+    <string name="permission">Пожалуйста, предоставьте разрешение на определение местоположения</string>
+    <string name="error">Ошибка соединения</string>
 </resources>

@@ -17,9 +17,6 @@ public class MainDataJSON {
     @SerializedName("temp_max")
     @Expose
     private float temp_max;
-    @SerializedName("temp_min")
-    @Expose
-    private float temp_min;
 
     public float getTemp() {
         return temp;
@@ -37,7 +34,4 @@ public class MainDataJSON {
         return temp_max;
     }
 
-    public float getTemp_min() {
-        return temp_min;
-    }
 }

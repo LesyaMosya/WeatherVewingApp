@@ -8,131 +8,108 @@ import androidx.annotation.NonNull;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class HandlerForecastWeatherJSON {
-    public int checkIndex(Calendar calendar, @NonNull ForecastWeatherResponse forecastWeather){
-        calendar.add(Calendar.DAY_OF_WEEK, -3);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        String tomorrow = dateFormat.format(calendar.getTime());
-
-        int step;
-        String strDateOfStep;
-
-        for (step=0; step<40; step++) {
-            strDateOfStep = forecastWeather.getList().get(step).getDt_txt();
-            try {
-                Date currentDate = dateFormat.parse(strDateOfStep);
-                strDateOfStep = dateFormat.format(currentDate);
-            }
-            catch (ParseException e){
-                e.printStackTrace();
-            }
-            if (tomorrow.equals(strDateOfStep)) {
-                break;
-            }
+    private Date convertCurrentData(String currentDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date convertedDate = null;
+        try {
+            convertedDate = format.parse(currentDate);
+        }
+        catch (ParseException e){
+            e.printStackTrace();
         }
 
-        return step;
+        return convertedDate;
     }
+    public List<WeatherData> setListForecastWeather(ForecastWeatherResponse forecastWeather){
+        List<WeatherData> listForecastWeather = new ArrayList<>();
 
-    public ArrayList<Integer> computeListMaxTemp(int index, @NonNull ForecastWeatherResponse forecastWeather){
-        ArrayList<Integer> arrayMaxTemp = new ArrayList<>();
+        Date date;
+        String iconCode = null;
+        int maxTemp = -40;
+        int avgTemp;
 
-        int step;
-        int countOfGaps = 0;
-
-        float stepMaxTemp;
-        float maxTemp = -40;
-
-        for (step = index; step < 40;) {
-            while (countOfGaps < 8) {
-                stepMaxTemp = forecastWeather.getList().get(step).getMain().getTemp_max();
-                maxTemp = Math.max(maxTemp, stepMaxTemp);
-
-                    countOfGaps++;
-                    step++;
-            }
-            arrayMaxTemp.add((int)maxTemp);
-
-            if ( arrayMaxTemp.size() == 4)
-            {
-                break;
-            }
-            else {
-                maxTemp = 0;
-                countOfGaps = 0;
-            }
-        }
-
-        return arrayMaxTemp;
-    }
-
-    public ArrayList<Integer> computeListMinTemp(int index, @NonNull ForecastWeatherResponse forecastWeather){
-        ArrayList<Integer> arrayMinTemp = new ArrayList<>();
-
-        int step;
-        int countOfGaps = 0;
-
-        float stepMinTemp;
-        float sumMinTemp = 0;
-
+        float sumTemp = 0;
+        float stepFeelsLikeTemp;
         int count = 0;
 
-        for (step = index; step < 40;) {
+        int countOfGaps = 0;
+        String currentDate = null;
+
+        int step = searchIndex(forecastWeather);
+
+        while (step < 40 && listForecastWeather.size()<4){
             while (countOfGaps < 8) {
-                stepMinTemp = forecastWeather.getList().get(step).getMain().getFeelsLike();
-                sumMinTemp += stepMinTemp;
+                currentDate = forecastWeather.getList().get(step).getDt_txt();
+                String checkedIcon = getIconCode(forecastWeather, currentDate, step);
+                if (checkedIcon != null) {
+                    iconCode = checkedIcon;
+                }
 
-                    count++;
-                    countOfGaps++;
-                    step++;
-            }
-            arrayMinTemp.add((int)(sumMinTemp/count));
+                maxTemp = Math.max(maxTemp, (int) forecastWeather.getList().get(step).getMain().getFeelsLike());
 
-            if ( arrayMinTemp.size() == 4)
-            {
-                break;
+                stepFeelsLikeTemp = forecastWeather.getList().get(step).getMain().getFeelsLike();
+                sumTemp += stepFeelsLikeTemp;
+
+                count++;
+                countOfGaps ++;
+                step++;
             }
-            else {
-                sumMinTemp = 0;
-                count = 0;
-                countOfGaps = 0;
-            }
+            countOfGaps = 0;
+
+            avgTemp = (int)sumTemp/count;
+            date = convertCurrentData(currentDate);
+
+            listForecastWeather.add(new WeatherData(date, iconCode, String.valueOf(maxTemp), String.valueOf(avgTemp)));
         }
 
-        return arrayMinTemp;
+        return listForecastWeather;
     }
 
-    public ArrayList<String> computeListIcons(int index, @NonNull ForecastWeatherResponse forecastWeather){
-        ArrayList<String> listIcons = new ArrayList<>();
+    private int searchIndex(@NonNull ForecastWeatherResponse forecastWeather){
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String today = format.format(calendar.getTime());
+
+        Date currentDate;
+        boolean flag = false;
+        int index = 0;
+
+        while (!flag){
+            String strCurrentDate = forecastWeather.getList().get(index).getDt_txt();
+            currentDate = convertCurrentData(strCurrentDate);
+            strCurrentDate = format.format(currentDate);
+            if (!today.equals(strCurrentDate)){
+                flag = true;
+            }
+            else {
+                index++;
+            }
+        }
+        return index;
+    }
+
+    private String getIconCode(@NonNull ForecastWeatherResponse forecastWeather, String currentDate, int index){
+
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         String timeForIcon = "12:00:00";
 
-        int step;
-        String strDateOfStep = null;
+        String strDateOfStep;
+        String iconCode = null;
 
-        String iconCode;
+        Date DateOfStep = convertCurrentData(currentDate);
+        strDateOfStep = timeFormat.format(DateOfStep);
 
-        for (step=index; step < 40; ) {
-            strDateOfStep = forecastWeather.getList().get(step).getDt_txt();
-            try {
-                Date DateOfStep = dateFormat.parse(strDateOfStep);
-                strDateOfStep = timeFormat.format(DateOfStep);
-            }
-            catch (ParseException e){
-                e.printStackTrace();
-            }
-            if (timeForIcon.equals(strDateOfStep)) {
-                iconCode = forecastWeather.getList().get(step).getWeather().get(0).getIcon();
-                listIcons.add(iconCode);
-                step += 7;
-            }
-            step++;
+        if (timeForIcon.equals(strDateOfStep)) {
+            iconCode = forecastWeather.getList().get(index).getWeather().get(0).getIcon();
         }
-        return listIcons;
+        return iconCode;
     }
 }

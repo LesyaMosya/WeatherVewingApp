@@ -1,324 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout     xmlns:android =  "http://schemas.android.com/apk/res/android"
-    xmlns:tools =  "http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    style="@style/main"
-    android:orientation="vertical"
-    android:padding="25dp"
-    tools:context =  ".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="weather"
+            type="com.example.weathervewingapp.Weather" />
+    </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <RelativeLayout
+        xmlns:tools =  "http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        style="@style/main"
+        android:orientation="vertical"
+        android:padding="25dp"
+        tools:context =  ".MainActivity">
 
-        <RelativeLayout
-            android:id="@+id/mainContainer"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="30dp"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/cityContainer"
+            <RelativeLayout
+                android:id="@+id/mainContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal|top"
-                android:orientation="horizontal"
-                android:layout_marginBottom="15dp">
-
-                <TextView
-                    android:id="@+id/city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/city" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/currentWeather"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:layout_marginBottom="30dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style = "@style/description"/>
+                android:layout_height="match_parent"
+                android:paddingTop="30dp"
+                android:visibility="visible">
 
                 <LinearLayout
+                    android:id="@+id/cityContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/icon"
-                        android:layout_width="140dp"
-                        android:layout_height="140dp"
-                        android:gravity="center_vertical"
-                        android:contentDescription="@string/description"/>
+                    android:gravity="center_horizontal|top"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="15dp">
 
                     <TextView
-                        android:id="@+id/temp"
+                        android:text="@{weather.city}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        style = "@style/current_weather" />
+                        style="@style/city" />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/currentWeather"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="100dp"
+                    android:layout_marginBottom="30dp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/feelsLikeString"
+                        android:text="@{weather.description}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/feelsLikeString"
-                        style = "@style/current_feels_like" />
-
-                    <Space
-                        android:layout_width="10dp"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/feelsLike"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style = "@style/current_feels_like" />
-
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/detailsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/currentWeather"
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal"
-                android:layout_marginBottom="40dp"
-                android:weightSum="2">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/windString"
-                        style = "@style/add_params" />
+                        style = "@style/description"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/base_icon"
+                            android:layout_width="160dp"
+                            android:layout_height="140dp"
+                            android:gravity="center_vertical"
+                            app:url="@{weather.currentTemp.iconName}"
+                            android:contentDescription="@string/description"/>
 
                         <TextView
-                            android:id="@+id/speedWind"
+                            android:text="@{weather.currentTemp.tempCurrent}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            style = "@style/add_params" />
+                            android:layout_gravity="center"
+                            style = "@style/current_weather" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/feelsLikeString"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/feelsLikeString"
+                            style = "@style/current_feels_like" />
 
                         <Space
                             android:layout_width="10dp"
                             android:layout_height="wrap_content" />
 
                         <TextView
-                            android:id="@+id/speedString"
+                            android:text="@{weather.currentTemp.tempFeelsLike}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/speedString"
+                            style = "@style/current_feels_like" />
+
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/detailsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/currentWeather"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="40dp"
+                    android:weightSum="2">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#3CF1EBF1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/windString"
+                            style = "@style/add_params" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:text="@{weather.windSpeed}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style = "@style/add_params" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#3CF1EBF1"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/humidityString"
+                            style = "@style/add_params" />
+
+                        <TextView
+                            android:text="@{weather.humidity}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             style = "@style/add_params" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <Space
-                    android:layout_width="10dp"
-                    android:layout_height="wrap_content" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/humidityString"
-                        style = "@style/add_params" />
-
-                    <TextView
-                        android:id="@+id/humidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style = "@style/add_params" />
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/nextDaysWeather"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/detailsContainer"
-                android:layout_centerHorizontal="true"
-                android:orientation="vertical"
-                android:weightSum="5">
-
-                <LinearLayout
-                    android:id="@+id/TomorrowWeather"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="17dp"
-                    android:weightSum="5">
 
-                    <TextView
-                        android:id="@+id/tomorrow"
-                        style="@style/days_of_week"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:text="@string/tomorrow" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
-                    <ImageView
-                        android:id="@+id/iconTomorrow"
-                        style = "@style/list_icons"
-                        android:contentDescription="@string/description"/>
+                    android:layout_below="@id/detailsContainer"/>
 
-                    <TextView
-                        android:id="@+id/tomorrowTemp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style = "@style/temp_of_week" />
-
-                    <TextView
-                        android:id="@+id/tomorrowFeelsLike"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style="@style/feels_like_of_week" />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/thirdDayWeather"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="17dp"
-                    android:layout_marginTop="10dp"
-                    android:weightSum="5">
-
-                    <TextView
-                        android:id="@+id/thirdDay"
-                        android:layout_height="wrap_content"
-                        style="@style/days_of_week" />
-
-                    <ImageView
-                        android:id="@+id/iconThird"
-                        style = "@style/list_icons"
-                        android:contentDescription="@string/description" />
-
-                    <TextView
-                        android:id="@+id/thirdTemp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style = "@style/temp_of_week" />
-
-                    <TextView
-                        android:id="@+id/thirdFeelsLike"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style="@style/feels_like_of_week"  />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/fourthDayWeather"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="17dp"
-                    android:layout_marginTop="10dp"
-                    android:weightSum="5">
-
-                    <TextView
-                        android:id="@+id/fourthDay"
-                        android:layout_height="wrap_content"
-                        style="@style/days_of_week" />
-
-                    <ImageView
-                        android:id="@+id/iconFourth"
-                        style = "@style/list_icons"
-                        android:contentDescription="@string/description"/>
-
-                    <TextView
-                        android:id="@+id/fourthTemp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style = "@style/temp_of_week" />
-
-                    <TextView
-                        android:id="@+id/fourthFeelsLike"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style="@style/feels_like_of_week"  />
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/fifthDayWeather"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#3CF1EBF1"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="17dp"
-                    android:layout_marginTop="10dp"
-                    android:weightSum="5">
-
-                    <TextView
-                        android:id="@+id/fifthDay"
-                        android:layout_height="wrap_content"
-                        style="@style/days_of_week" />
-
-                    <ImageView
-                        android:id="@+id/iconFifth"
-                        style = "@style/list_icons"
-                        android:layout_gravity="center_vertical"
-                        android:contentDescription="@string/description" />
-
-                    <TextView
-                        android:id="@+id/fifthTemp"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style = "@style/temp_of_week" />
-
-                    <TextView
-                        android:id="@+id/fifthFeelsLike"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        style="@style/feels_like_of_week"  />
-
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</RelativeLayout>
+            </RelativeLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+</layout>
 

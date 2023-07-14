@@ -17,7 +17,7 @@
     </style>
     <style name="current_weather">
         <item name="android:textColor">@color/base</item>
-        <item name="android:textSize">90sp</item>
+        <item name="android:textSize">80sp</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
     <style name="current_feels_like">
