@@ -13,8 +13,12 @@
         android:layout_height="match_parent"
         style="@style/main"
         android:orientation="vertical"
-        android:padding="25dp"
         tools:context =  ".MainActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style = "@style/tool_bar"
+            android:title="@string/app_name" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -25,7 +29,9 @@
                 android:id="@+id/mainContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="30dp"
+                android:paddingTop="80dp"
+                android:paddingHorizontal="25dp"
+                android:paddingBottom="10dp"
                 android:visibility="visible">
 
                 <LinearLayout

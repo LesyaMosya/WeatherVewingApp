@@ -8,4 +8,5 @@
     <string name="description">Sun</string>
     <string name="permission">Please grant the location permission</string>
     <string name="error">Error connected</string>
+    <string name="success">Geolocation access received</string>
 </resources>

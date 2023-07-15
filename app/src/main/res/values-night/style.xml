@@ -3,6 +3,11 @@
     <style name="main">
         <item name="android:background">@drawable/bd_gradient_night</item>
     </style>
+    <style name="tool_bar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@color/head</item>
+    </style>
     <style name="city">
         <item name="android:textColor">@color/light</item>
         <item name="android:textSize">40sp</item>
@@ -11,7 +16,7 @@
     </style>
     <style name="description">
         <item name="android:textColor">@color/base</item>
-        <item name="android:textSize">30sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>

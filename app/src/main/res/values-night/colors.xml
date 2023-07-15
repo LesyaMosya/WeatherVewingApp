@@ -3,4 +3,7 @@
     <color name="base">#C7BBDC</color>
     <color name="light">#917ABC</color>
     <color name="dark">#9589AC</color>
+    <color name="head">#D0BCFF</color>
+
+    <color name="title">#000</color>
 </resources>

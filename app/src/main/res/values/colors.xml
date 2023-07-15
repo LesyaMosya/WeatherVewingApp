@@ -3,7 +3,7 @@
     <color name="light">#8990BA</color>
     <color name="base">#3E2F5A</color>
     <color name="dark">#250E4E</color>
+    <color name="head">#6750A4</color>
 
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="title">#FFFFFF</color>
 </resources>

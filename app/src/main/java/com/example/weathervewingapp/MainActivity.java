@@ -1,16 +1,23 @@
 package com.example.weathervewingapp;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.Manifest;
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,12 +31,13 @@ import java.util.List;
 import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
     String lang;
     double lon, lat;
@@ -40,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.list);
         lang = Locale.getDefault().getLanguage();
+
+        Toolbar mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.title, getTheme()));
+        mToolbar.setLogo(R.mipmap.ic_weather_foreground);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -58,34 +78,33 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getLocation();
+    }
+
+    private void getLocation(){
+        LocationManager locationManager = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                1000 * 10, 10, locationListener);
+
+        lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
+        lon = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+
         getCurrentWeatherResponse();
+        getForecastWeatherResponse();
     }
 
     private class MyLocationListener implements LocationListener {
 
-        public void setUpLocationListener(Context context)
-        {
-            LocationManager locationManager = (LocationManager)
-                    context.getSystemService(Context.LOCATION_SERVICE);
-
-            LocationListener locationListener = new MyLocationListener();
-
-
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-
-            lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
-            lon = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
-        }
-
         @Override
         public void onLocationChanged(Location location) {
-/*            lon = location.getLongitude();
+            lon = location.getLongitude();
             lat = location.getLatitude();
-
-            getCurrentWeatherResponse();*/
         }
     }
     @Override
@@ -96,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
 
         if (EasyPermissions.hasPermissions(this, permissions)) {
-           getCurrentWeatherResponse();
+           getLocation();
         }
     }
 
@@ -111,17 +130,28 @@ public class MainActivity extends AppCompatActivity {
                     getResources().getString(R.string.permission), REQUEST_LOCATION_PERMISSION, perms);
         }
     }
-    private void getCurrentWeatherResponse() {
 
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {}
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
-            return;
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
         }
+    }
 
-        lat = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude();
-        lon = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            Toast.makeText(this, getResources().getString(R.string.success), Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+    private void getCurrentWeatherResponse() {
 
         OpenWeatherRequest openWeatherRequest = new OpenWeatherRequest();
 
@@ -136,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
                         CurrentWeatherResponse currentWeather = response.body();
                         if (currentWeather != null){
                             loadCurrentWeather(currentWeather);
-                            getForecastWeatherResponse();
                         }
                         else {
                             Toast.makeText(getApplicationContext(),

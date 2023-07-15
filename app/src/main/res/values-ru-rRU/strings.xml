@@ -8,4 +8,5 @@
     <string name="tomorrow">Завтра</string>
     <string name="permission">Пожалуйста, предоставьте разрешение на определение местоположения</string>
     <string name="error">Ошибка соединения</string>
+    <string name="success">Доступ к геолокации получен</string>
 </resources>
