@@ -6,7 +6,9 @@
     <string name="speedString">m/sec</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="description">Sun</string>
-    <string name="permission">Please grant the location permission</string>
     <string name="error">Error connected</string>
+    <string name="permission">Please provide permission to determine the current location</string>
     <string name="success">Geolocation access received</string>
+    <string name="title_error">Permission is required</string>
+    <string name="description_error">The application will not work properly without permission. Please open the settings screen to grant permission.</string>
 </resources>

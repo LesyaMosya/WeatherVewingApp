@@ -39,10 +39,14 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
 
+    boolean flagBans = false;
     String lang;
     double lon, lat;
 
-    private final int REQUEST_LOCATION_PERMISSION = 1;
+    private static final String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
+    private static final int RC_LOCATION = 126;
+
     SwipeRefreshLayout swipeRefreshLayout;
     ActivityWeatherBinding binding;
     RecyclerView recyclerView;
@@ -71,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
-            getCurrentWeatherResponse();
+            getLocation();
         });
     }
 
@@ -79,6 +83,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onResume() {
         super.onResume();
         getLocation();
+    }
+
+    private class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+        }
     }
 
     private void getLocation(){
@@ -99,12 +112,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         getForecastWeatherResponse();
     }
 
-    private class MyLocationListener implements LocationListener {
-
-        @Override
-        public void onLocationChanged(Location location) {
-            lon = location.getLongitude();
-            lat = location.getLatitude();
+    @AfterPermissionGranted(RC_LOCATION)
+    public void requestLocationPermission() {
+        if (hasLocationPermission()){
+            Toast.makeText(this, getResources().getString(R.string.success), Toast.LENGTH_SHORT)
+                    .show();
+        }
+        else {
+            EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission),
+                    RC_LOCATION, PERMISSIONS_LOCATION);
         }
     }
     @Override
@@ -113,32 +129,29 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-
-        if (EasyPermissions.hasPermissions(this, permissions)) {
-           getLocation();
-        }
     }
 
-    @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
-    public void requestLocationPermission() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
-
-        if (!EasyPermissions.hasPermissions(this, perms)) {
-
-            EasyPermissions.requestPermissions(this,
-                    getResources().getString(R.string.permission), REQUEST_LOCATION_PERMISSION, perms);
-        }
+    private boolean hasLocationPermission() {
+        return EasyPermissions.hasPermissions(this, PERMISSIONS_LOCATION);
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {}
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+    }
 
     @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            new AppSettingsDialog.Builder(this).build().show();
+            if (!flagBans) {
+                flagBans = true;
+                new AppSettingsDialog.Builder(this)
+                        .setRationale(getResources().getString(R.string.description_error))
+                        .setTitle(getResources().getString(R.string.title_error))
+                        .build()
+                        .show();
+            }
         }
     }
 
@@ -147,8 +160,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            Toast.makeText(this, getResources().getString(R.string.success), Toast.LENGTH_SHORT)
-                    .show();
+            if (!hasLocationPermission()) {
+                Toast.makeText(this,
+                                getResources().getString(R.string.title_error),
+                                Toast.LENGTH_LONG)
+                        .show();
+            }
+            else {
+                getLocation();
+            }
         }
     }
     private void getCurrentWeatherResponse() {

@@ -6,7 +6,9 @@
     <string name="description">Солнечно</string>
     <string name="speedString">м/сек</string>
     <string name="tomorrow">Завтра</string>
-    <string name="permission">Пожалуйста, предоставьте разрешение на определение местоположения</string>
     <string name="error">Ошибка соединения</string>
     <string name="success">Доступ к геолокации получен</string>
+    <string name="title_error">Необходимо разрешение</string>
+    <string name="description_error">Без разрешения приложение будет работать некорректно. Пожалуйста, откройте экран настроек, чтоб предоставить разрешение.</string>
+    <string name="permission">Пожалуйста, предоставьте разрешение для определения текущего местоположения</string>
 </resources>
